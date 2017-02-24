@@ -46,3 +46,4 @@ redis>=2.10.5
 
 # Your custom requirements go here
 django-mptt==0.8.7
+djangorestframework==3.5.3

@@ -20,6 +20,7 @@ urlpatterns = [
 
     # Your stuff: custom urls includes go here
     url(r'^', include('manager.urls')),
+    url(r'^api/', include('manager.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
