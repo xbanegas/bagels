@@ -5,7 +5,8 @@ from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
-from .models import Bookmark, Tag
+from .bookmarks.models import Bookmark
+from .tags.models import Tag
 from .serializers import BookmarkSerializer, TagSerializer
 
 class BookmarkQueryMixin(object):

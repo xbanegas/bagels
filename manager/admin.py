@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Bookmark, Tag
+from .bookmarks.models import Bookmark
+from .tags.models import Tag
 
 admin.site.register(Bookmark)
 admin.site.register(Tag)

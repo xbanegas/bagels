@@ -7,12 +7,12 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='home'),
     url(
-        regex=r"^api/links/$",
+        regex=r"^api/bookmarks/$",
         view=views.BookmarkCreateReadView.as_view(),
         name="link_rest_api"
     ),
     url(
-        regex=r"^api/links/(?P<id>[0-9]+)/$",
+        regex=r"^api/bookmarks/(?P<id>[0-9]+)/$",
         view=views.BookmarkReadUpdateDeleteView.as_view(),
         name="link_rest_api"
     ),

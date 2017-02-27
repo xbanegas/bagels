@@ -1,14 +1,15 @@
 from rest_framework import serializers
 
-from .models import Bookmark, Tag
+from .bookmarks.models import Bookmark
+from .tags.models import Tag
 
 class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bookmark
-        field = ('id', 'user', 'created', 'modified', 'url', 'title'
+        fields = ('id', 'user', 'created', 'modified', 'url', 'title',
                 'tags', 'notes')
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        field = ('id', 'name')
+        fields = ('id', 'name', 'parent', 'created', 'modified')
