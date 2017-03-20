@@ -1,4 +1,4 @@
-alias bgl-host-env="eval $(docker-machine env bagelHost)"
+alias bgl-host-env="eval '$(docker-machine env bagelHost)'"
 alias bgl-dev-up="docker-compose -f dev.yml up"
 alias bgl-dev-run="docker-compose -f dev.yml run"
 alias bgl-djsh="docker exec -it ccbagels_django_1 bash"
