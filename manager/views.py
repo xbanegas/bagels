@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.views.generic import ListView
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
@@ -35,6 +38,9 @@ class TagReadUpdateDeleteView(TagQueryMixin, RetrieveUpdateDestroyAPIView):
     serializer_class = TagSerializer
     lookup_field = 'id'
 
-@login_required
-def index(request):
-    return render(request, 'pages/home.html')
+class BookmarkListView(LoginRequiredMixin, ListView):
+    model = Bookmark
+    # These next two lines tell the view to index lookups by username
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+    template_name = "bookmarks/bookmark_list.html"

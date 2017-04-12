@@ -5,7 +5,7 @@ from django.shortcuts import render
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='home'),
+    url(r'^$', views.BookmarkListView.as_view(), name='home'),
     url(
         regex=r"^api/bookmarks/$",
         view=views.BookmarkCreateReadView.as_view(),
