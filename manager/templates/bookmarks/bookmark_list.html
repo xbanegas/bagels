@@ -7,7 +7,16 @@
   <h2>Bookmarks</h2>
   <div class="list-group">
     {% for bookmark in bookmark_list %}
-    <div>{{ bookmark.created }} || {{ bookmark.url }}</div>
+      <div>{{ bookmark.created }} || {{ bookmark.url }}
+        {% for tag in bookmark.tags.all %}
+          <span>{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <div>
+    {% for tag in tag_list %}
+      {{ tag.name }}
     {% endfor %}
   </div>
 </div>

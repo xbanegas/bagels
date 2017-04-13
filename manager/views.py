@@ -38,9 +38,10 @@ class TagReadUpdateDeleteView(TagQueryMixin, RetrieveUpdateDestroyAPIView):
     serializer_class = TagSerializer
     lookup_field = 'id'
 
-class BookmarkListView(LoginRequiredMixin, ListView):
-    model = Bookmark
-    # These next two lines tell the view to index lookups by username
-    slug_field = 'id'
-    slug_url_kwarg = 'id'
-    template_name = "bookmarks/bookmark_list.html"
+@login_required
+def index(request):
+    user_id = request.user.id
+    tags = Tag.objects.filter(user__id=user_id)
+    bookmarks = Bookmark.objects.filter(user__id=user_id)
+    context = {'tag_list': tags, 'bookmark_list': bookmarks}
+    return render(request, "bookmarks/bookmark_list.html", context)
