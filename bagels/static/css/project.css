@@ -36,3 +36,20 @@
 [hidden][style="display: block;"] {
   display: block !important;
 }
+
+.bookmark-form select { overflow: scroll; }
+
+.bookmark-form textarea { height: 100px; }
+
+.list-group table .created {
+  min-width: 210px;
+  font-size: .9em;
+}
+
+.list-group table .url { /* white-space: nowrap; */ }
+
+.list-group table span {
+  border: 1px solid black;
+  padding: 1px 2px;
+  font-size: .75em;
+}
