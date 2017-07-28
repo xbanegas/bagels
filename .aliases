@@ -1,6 +1,21 @@
+# Development
 alias bgl-host-env="eval '$(docker-machine env bagelHost)'"
 alias bgl-dev-up="docker-compose -f dev.yml up"
 alias bgl-dev-run="docker-compose -f dev.yml run"
 alias bgl-djsh="docker exec -it ccbagels_django_1 bash"
 alias bgl-pssh="docker exec -it ccbagels_postgres_1 bash"
 alias bgl-test="bgl-dev-run django coverage run manage.py test"
+
+# Droplet Docker:
+# https://docs.docker.com/machine/examples/ocean/#step-4-run-docker-commands-on-the-droplet
+alias bgl-prod-env="eval '$(docker-machine env bagels-prod)'"
+alias bgl-prod-create="docker-machine create -d digitalocean --digitalocean-image=debian-8-x64 --digitalocean-access-token=$DIGITAL_OCEAN bagels-prod"
+
+# Cookie Cutter Deploy with Docker:
+# https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
+alias bgl-prod-build="docker-compose -f docker-compose.yml build"
+alias bgl-prod-up="docker-compose -f docker-compose.yml up"
+alias bgl-prod-migrate="docker-compose -f docker-compose.yml run django python manage.py migrate"
+alias bgl-prod-create-su="docker-compose -f docker-compose.yml run django python manage.py createsuperuser"
+alias bgl-prod-shell="docker-compose -f docker-compose.yml run django python manage.py shell"
+alias bgl-prod-logs="docker-compose -f docker-compose.yml logs"
