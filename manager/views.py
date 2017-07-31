@@ -61,6 +61,7 @@ def get_index_user_context(user_id):
     tags = Tag.objects.filter(user__id=user_id)
     bookmarks = Bookmark.objects.filter(user__id=user_id).order_by('-created')
     form = BookmarkForm()
+    form.fields['tags'].queryset = tags
     context = {'nodes': tags, 'bookmark_list': bookmarks, 'form': form}
     return context
 
