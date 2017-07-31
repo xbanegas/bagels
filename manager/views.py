@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.forms import ModelForm
 from django.http import HttpResponse
 
@@ -97,3 +97,16 @@ def index(request):
 @login_required
 def detail(request):
     pass
+
+@login_required
+def list_by_tag(request, tag_id):
+    user_id = request.user.id
+    template = 'bookmarks/bookmark_list_bytag.html'
+    tag_exists = Tag.objects.filter(pk=tag_id)
+    if request.method == 'GET' and tag_exists:
+        bookmarks = Bookmark.objects.filter(user__id=user_id, tags__id=tag_id).order_by('-created')
+        context = {'nodes': {}, 'bookmark_list': bookmarks}
+        return render(request, template, context)
+    # @TODO return proper response code
+    else:
+        return redirect('/')

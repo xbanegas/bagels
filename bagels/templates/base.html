@@ -83,7 +83,7 @@
                 <ul class="list-group" >
                   {% recursetree nodes %}
 
-                    <li class="list-group-item list-group-item-action"><a class="btn-outline-secondary" href="#{{ node.id }}">{{ node.name }}</a></li>
+                    <li class="list-group-item list-group-item-action"><a class="btn-outline-secondary" href="list/{{ node.id }}">{{ node.name }}</a></li>
                     {% if not node.is_leaf_node %}
                         <ul>
                           {{ children }}

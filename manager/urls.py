@@ -10,6 +10,11 @@ urlpatterns = [
         name='home'
     ),
     url(
+        regex=r"^list/(?P<tag_id>[0-9]+)/$",
+        view=views.list_by_tag,
+        name='list_by_tag'
+    ),
+    url(
         regex=r"^api/bookmarks/$",
         view=views.BookmarkCreateReadView.as_view(),
         name="link_rest_api"
