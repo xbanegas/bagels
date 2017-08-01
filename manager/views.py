@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django import forms
 from django.forms import ModelForm
 from django.http import HttpResponse
 
@@ -49,6 +50,9 @@ class BookmarkForm(ModelForm):
     class Meta:
         model = Bookmark
         fields = ['title', 'url', 'tags', 'notes']
+        widgets = {
+            'tags': forms.CheckboxSelectMultiple
+        }
 
 
 # @ TODO Move to utils, form, or Bookmark
