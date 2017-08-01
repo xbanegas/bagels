@@ -74,20 +74,28 @@
     <!--  Tag Sidebar -->
     {% if request.user.is_authenticated %}
       {% load mptt_tags %}
+
+      {% if nodes %}
       <nav class="navbar navbar-default sidebar" role="navigation" style="float:left; position:absolute;">
 
 
           <div class="container-fluid">
             <div class="navbar-header">
-              <div style="">
-                <ul class="list-group" >
+              <a href="#tag_sidebar" data-toggle="collapse" class="nav-link"><h5>Tags</h5></a>
+              <div style="" class="collapse" id="tag_sidebar">
+                <ul class="list-group">
                   {% recursetree nodes %}
 
-                    <li class="list-group-item list-group-item-action"><a class="btn-outline-secondary" href="list/{{ node.id }}">{{ node.name }}</a></li>
+                    <li class="list-group-item list-group-item-action">
+                      {% if not node.is_leaf_node %}
+                        <a class="btn btn-outline-secondary btn-sm" data-toggle="collapse" href="#child_{{ node.id }}">+</a>
+                      {% endif %}
+                      <a class="btn-outline-secondary" href="list/{{ node.id }}">{{ node.name }}</a>
+                    </li>
                     {% if not node.is_leaf_node %}
-                        <ul>
-                          {{ children }}
-                        </ul>
+                      <ul class="collapse" id="child_{{ node.id }}">
+                        {{ children }}
+                      </ul>
                     {% endif %}
 
                   {% endrecursetree %}
@@ -96,6 +104,7 @@
             </div>
           </div>
       </nav>
+      {% endif %}
     {% endif %}
 
     <!-- Main -->
