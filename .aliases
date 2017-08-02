@@ -1,5 +1,6 @@
 # Development
 alias bgl-host-env="eval '$(docker-machine env bagelHost)'"
+alias bgl-host-unset="eval '$(docker-machine env -u)'"
 alias bgl-dev-build="docker-compose -f dev.yml build"
 alias bgl-dev-up="docker-compose -f dev.yml up"
 alias bgl-dev-run="docker-compose -f dev.yml run"
