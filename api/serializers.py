@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from .bookmarks.models import Bookmark
-from .tags.models import Tag
+from manager.bookmarks.models import Bookmark
+from manager.tags.models import Tag
 
 class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:

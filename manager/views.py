@@ -1,46 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.forms.models import model_to_dict
 
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+
 
 from .bookmarks.models import Bookmark
 from .tags.models import Tag
-from .serializers import BookmarkSerializer, TagSerializer
 from .forms import BookmarkForm, QuickTagForm
 
-
-# @TODO Move the api views to its own module
-class BookmarkQueryMixin(object):
-    def get_queryset(self):
-        user = self.request.user.id
-        return Bookmark.objects.filter(user__id=user)
-
-class TagQueryMixin(object):
-    def get_queryset(self):
-        user = self.request.user.id
-        return Tag.objects.filter(user__id=user)
-
-
-class BookmarkCreateReadView(BookmarkQueryMixin, ListCreateAPIView):
-    serializer_class = BookmarkSerializer
-    lookup_field = 'id'
-
-
-class BookmarkReadUpdateDeleteView(BookmarkQueryMixin, RetrieveUpdateDestroyAPIView):
-    serializer_class = BookmarkSerializer
-    lookup_field = 'id'
-
-
-class TagCreateReadView(TagQueryMixin, ListCreateAPIView):
-    serializer_class = TagSerializer
-    lookup_field = 'id'
-
-
-class TagReadUpdateDeleteView(TagQueryMixin, RetrieveUpdateDestroyAPIView):
-    serializer_class = TagSerializer
-    lookup_field = 'id'
 
 
 
@@ -60,6 +28,12 @@ def get_index_user_context(user_id):
     context = {'nodes': tags, 'bookmark_list': bookmarks, 'form': form, 'tag_form': tag_form}
     return context
 
+def get_detail_user_context(user_id, bookmark):
+    tags = Tag.objects.filter(user__id=user_id)
+    form = BookmarkForm(initial=model_to_dict(bookmark))
+    tag_form = QuickTagForm()
+    context = {'nodes': tags, 'form': form, 'tag_form': tag_form}
+    return context
 
 @login_required
 def index(request):
@@ -107,10 +81,19 @@ def index(request):
             context['messages'] = ['invalid form data']
             return render(request, template, context, status=400)
 
-# @TODO Make CBV
 @login_required
-def detail(request):
-    pass
+def bookmark_detail(request, bookmark_id):
+    user_id = request.user.id
+    template = 'bookmarks/bookmark_detail.html'
+
+    if request.method == 'GET':
+        bm_exists = Bookmark.objects.filter(pk=bookmark_id)
+        if bm_exists:
+            context = get_detail_user_context(user_id=user_id, bookmark=bm_exists[0])
+            return render(request, template, context)
+        # @TODO return proper response code
+        else:
+            return redirect('/')
 
 @login_required
 def list_by_tag(request, tag_id):
@@ -119,7 +102,7 @@ def list_by_tag(request, tag_id):
     tag_exists = Tag.objects.filter(pk=tag_id)
     if request.method == 'GET' and tag_exists:
         bookmarks = Bookmark.objects.filter(user__id=user_id, tags__id=tag_id).order_by('-created')
-        context = {'nodes': {}, 'bookmark_list': bookmarks, 'tag': {'name': tag_exists[0].name,'id': tag_id}}
+        context = {'nodes': {}, 'bookmark_list': bookmarks, 'tag': {'name': tag_exists[0].name, 'id': tag_id}}
         return render(request, template, context)
     # @TODO return proper response code
     else:

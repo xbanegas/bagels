@@ -6,54 +6,9 @@
 
 <div class="container">
   <div class="row">
+    <h5>ADD A BOOKMARK...</h5>
     <form action="/" method="post" class="bookmark-form form-horizontal">
-      <h5>ADD A BOOKMARK...</h5>
-      <div class="col-sm-6">
-        <div class="row">
-          {% csrf_token %}
-          <div class="form-group col-sm-12">
-            <div class="row">
-              <div class="col-sm-12">{{ form.url.errors }}</div>
-              <label for="id_url" class="col-sm-2 control-label">Url:</label>
-              <div class="col-sm-10">
-                <input id="id_url" maxlength="255" name="url" type="text" class="form-control" required>
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-sm-12">
-            <div class="row">
-              <div class="col-sm-12">{{ form.title.errors }}</div>
-              <label for="id_title" class="col-sm-2 control-label">Title:</label>
-              <div class="col-sm-10">
-                <input id="id_title" maxlength="255" name="title" type="text" class="form-control">
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-sm-12">
-            <div class="row">
-              <div class="col-sm-12">{{ form.tags.errors }}{{ form.notes.errors }}</div>
-              <div class="col-sm-5" >
-                <div class="row">
-                  <div class="col-sm-12"><label for="id_tags" class="control-label">Tags:</label></div>
-                  <div class="col-sm-10"><input id="id_name" maxlength="50" name="name" type="text" class="form-control"></div>
-                </div>
-                <div class="row" id="tags_checkbox">
-                  <div class="col-sm-12">
-                    {{ form.tags }}
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-7">
-                <label for="id_notes" class="control-label">Notes:</label>
-                <textarea cols="50" id="id_notes" name="notes" rows="15" class="form-control"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-sm-12" id="bookmark_submit">
-              <button class="btn btn-primary text-right" type="submit">OK</button>
-          </div>
-        </div>
-      </div>
+      {% include "bookmarks/form.html" %}
     </form>
   </div>
 
@@ -77,7 +32,7 @@
               {% endfor %}
               <!-- @TODO Style to CSS -->
               <div>
-                <a class="btn btn-outline-secondary btn-sm" style="float:right;" href="/#detail">edit</a>
+                <a class="btn btn-outline-secondary btn-sm" style="float:right;" href="{% url 'manager:bookmark_detail' bookmark.id %}">edit</a>
                 {% if bookmark.notes %}
                   <a class="btn btn-outline-info btn-sm" style="float:right;" href="/#notes">notes</a>
                 {% endif %}

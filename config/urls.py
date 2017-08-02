@@ -19,8 +19,10 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
+    url(r'^api/', include('api.urls', namespace='api')),
     url(r'^', include('manager.urls', namespace='manager')),
-    url(r'^api/', include('manager.urls'))
+
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
