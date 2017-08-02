@@ -32,12 +32,17 @@
           <div class="form-group col-sm-12">
             <div class="row">
               <div class="col-sm-12">{{ form.tags.errors }}{{ form.notes.errors }}</div>
-                <label for="id_tags" class="col-sm-5 control-label">Tags:</label>
-                <label for="id_notes" class="col-sm-7 control-label">Notes:</label>
-              <div class="col-sm-5" id="tags_checkbox">
+              <div class="col-sm-5" >
+                <div class="row">
+                  <div class="col-sm-2"><label for="id_tags" class="control-label">Tags:</label></div>
+                  <div class="col-sm-10"><input id="id_name" maxlength="50" name="name" type="text" class="form-control"></div>
+                </div>
+                <div class="container" id="tags_checkbox">
                 {{ form.tags }}
+                  </div>
               </div>
               <div class="col-sm-7">
+                <label for="id_notes" class="control-label">Notes:</label>
                 <textarea cols="50" id="id_notes" name="notes" rows="15" class="form-control"></textarea>
               </div>
             </div>
