@@ -39,7 +39,7 @@
 
 .bookmark-form select { overflow: scroll; }
 
-.bookmark-form textarea { height: 100px; }
+.bookmark-form textarea { height: 200px; }
 
 .list-group table .created {
   min-width: 210px;
@@ -62,7 +62,8 @@
 
 #tags_checkbox ul {
   list-style: none;
-  /* padding-left: 0; */
+  padding-top: 15px;
 }
+
 
 #bookmark_submit {text-align: right;}
