@@ -1,0 +1,37 @@
+{% load mptt_tags %}
+
+
+  <nav class="navbar navbar-default sidebar" role="navigation" style="float:left; position:absolute;">
+
+      <div class="container-fluid">
+        <div class="navbar-header">
+
+          <a href="#tag_sidebar" data-toggle="collapse" class="nav-link"><h5>Tags</h5></a>
+
+            <div style="" class="collapse" id="tag_sidebar">
+              {% if nodes %}
+                <ul class="list-group">
+                  {% recursetree nodes %}
+
+                    <li class="list-group-item list-group-item-action">
+                      {% if not node.is_leaf_node %}
+                        <a class="btn btn-outline-secondary btn-sm" data-toggle="collapse" href="#child_{{ node.id }}">+</a>
+                      {% endif %}
+                      <a class="btn-outline-secondary" href="list/{{ node.id }}">{{ node.name }}</a>
+                    </li>
+                    {% if not node.is_leaf_node %}
+                      <ul class="collapse" id="child_{{ node.id }}">
+                        {{ children }}
+                      </ul>
+                    {% endif %}
+
+                  {% endrecursetree %}
+                </ul>
+              {% else %}
+                <p>Create some tags!</p>
+              {% endif %}
+            </div>
+        </div>
+      </div>
+  </nav>
+

@@ -28,83 +28,13 @@
 
   <body>
 
-    <div class="m-b-1">
+    <!--  Top Navbar -->
+    {% include "nav/topbar.html" %}
 
-
-      <nav class="navbar navbar-dark navbar-static-top bg-inverse">
-        <div class="container">
-          <a class="navbar-brand" href="/">Bagels</a>
-          <button type="button" class="navbar-toggler hidden-sm-up pull-xs-right" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
-            &#9776;
-          </button>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-toggleable-xs" id="bs-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">About</a>
-              </li>
-            </ul>
-
-            <ul class="nav navbar-nav pull-xs-right">
-              {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-                </li>
-              {% else %}
-                <li class="nav-item">
-                  <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                </li>
-                <li class="nav-item">
-                  <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                </li>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </div>
 
     <!--  Tag Sidebar -->
     {% if request.user.is_authenticated %}
-      {% load mptt_tags %}
-
-      {% if nodes %}
-      <nav class="navbar navbar-default sidebar" role="navigation" style="float:left; position:absolute;">
-
-
-          <div class="container-fluid">
-            <div class="navbar-header">
-              <a href="#tag_sidebar" data-toggle="collapse" class="nav-link"><h5>Tags</h5></a>
-              <div style="" class="collapse" id="tag_sidebar">
-                <ul class="list-group">
-                  {% recursetree nodes %}
-
-                    <li class="list-group-item list-group-item-action">
-                      {% if not node.is_leaf_node %}
-                        <a class="btn btn-outline-secondary btn-sm" data-toggle="collapse" href="#child_{{ node.id }}">+</a>
-                      {% endif %}
-                      <a class="btn-outline-secondary" href="list/{{ node.id }}">{{ node.name }}</a>
-                    </li>
-                    {% if not node.is_leaf_node %}
-                      <ul class="collapse" id="child_{{ node.id }}">
-                        {{ children }}
-                      </ul>
-                    {% endif %}
-
-                  {% endrecursetree %}
-                </ul>
-              </div>
-            </div>
-          </div>
-      </nav>
-      {% endif %}
+      {% include "nav/sidebar.html" %}
     {% endif %}
 
     <!-- Main -->
