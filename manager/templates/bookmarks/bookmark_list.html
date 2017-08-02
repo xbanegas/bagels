@@ -62,8 +62,8 @@
       <tbody>
         {% for bookmark in bookmark_list %}
           <tr>
-            <td class="created">{{ bookmark.created }}</td>
-            <td class="url">
+            <td class="created col-sm-3">{{ bookmark.created }}</td>
+            <td class="url col-sm-9">
               <a href="{{ bookmark.url }}">
                 {% if bookmark.title %}
                   {{ bookmark.title}}
