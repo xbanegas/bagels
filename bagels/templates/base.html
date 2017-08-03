@@ -24,10 +24,20 @@
 
     {% endblock %}
 
+
+    <style type="text/css">
+      @font-face {
+        font-family: "BrownStd-Regular.otf";
+        src: url({% static 'fonts/BrownStd-Regular.otf' %}) format("opentype");
+      }
+      * {
+        font-family: "BrownStd-Regular", Verdana, Tahoma!important;
+      }
+    </style>
+
   </head>
 
   <body>
-
     <!--  Top Navbar -->
     {% include "nav/topbar.html" %}
 
