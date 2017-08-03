@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms.models import model_to_dict
+from django.contrib import messages
 
 from .bookmarks.models import Bookmark
 from .tags.models import Tag
@@ -58,18 +59,20 @@ def save_form_and_response(request, request_POST, template, bookmark, edit=False
                 bm.tags.add(new_tag)
             if edit:
                 context = get_detail_user_context(user_id, bookmark)
+                messages.success(request, 'Bookmark Saved')
             else:
                 context = get_index_user_context(user_id)
             return render(request, template, context)
         else:
             context = get_index_user_context(user_id)
-            context['messages'] = ['duplicate link not saved']
+            messages.warning(request, 'Duplicate link not saved')
             return render(request, template, context, status=400)
     else:
         print(form.errors)
         context = get_index_user_context(user_id)
-        context['messages'] = ['invalid form data']
+        messages.error(request, 'Check the form and try again')
         return render(request, template, context, status=400)
+
 
 @login_required
 def index(request):
