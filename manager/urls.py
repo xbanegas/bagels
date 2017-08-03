@@ -19,4 +19,9 @@ urlpatterns = [
         view=views.bookmark_detail,
         name='bookmark_detail'
     ),
+    url(
+        regex=r"^bookmark/(?P<bookmark_id>[0-9]+)/delete/$",
+        view=views.bookmark_delete,
+        name='bookmark_delete'
+    )
 ]

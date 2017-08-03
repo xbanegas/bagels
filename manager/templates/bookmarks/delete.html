@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h5>Delete Bookmark</h5>
+<p>{{ bookmark.url }}</p>
+<p>Are you sure?</p>
+<form action="{% url 'manager:bookmark_delete' bookmark.id %}" method="post">
+  {% csrf_token %}
+  <div class="form-group col-sm-12">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a class="btn btn-primary" href="{% url 'manager:bookmark_detail' bookmark.id %}">Cancel</a>
+  </div>
+</form>
+
+{% endblock content %}

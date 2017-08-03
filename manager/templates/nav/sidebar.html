@@ -17,7 +17,7 @@
                       {% if not node.is_leaf_node %}
                         <a class="btn btn-outline-secondary btn-sm" data-toggle="collapse" href="#child_{{ node.id }}">+</a>
                       {% endif %}
-                      <a class="btn-outline-secondary" href="list/{{ node.id }}">{{ node.name }}</a>
+                      <a class="btn-outline-secondary" href="{% url 'manager:list_by_tag' node.id %}">{{ node.name }}</a>
                     </li>
                     {% if not node.is_leaf_node %}
                       <ul class="collapse" id="child_{{ node.id }}">

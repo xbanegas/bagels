@@ -41,6 +41,8 @@
 
 .bookmark-form textarea { height: 200px; }
 
+.bookmark-form { padding-top: 20px; }
+
 .list-group table .created {
   min-width: 210px;
   font-size: .9em;
@@ -66,4 +68,4 @@
 }
 
 
-#bookmark_submit {text-align: right;}
+#bookmark_submit {float: right;}

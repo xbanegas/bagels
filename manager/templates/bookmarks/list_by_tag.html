@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}Bookmarks{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h4>{{ tag.name }}</h4>
+  {% include 'bookmarks/list.html' %}
+</div>
+
+{% endblock content %}
