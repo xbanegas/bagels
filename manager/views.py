@@ -37,44 +37,39 @@ def save_form_and_response(request, request_POST, template, bookmark, edit=False
     user_id = request.user.id
 
     # Instantiate, Validate, Save New Tag Forms
-    if 'name' in request_POST is not ['']:
-        new_tag = True
-    else:
-        new_tag = None
-    if new_tag:
+    if request_POST['name']:
         new_tag_form = QuickTagForm(request_POST)
         new_tag_form.instance.user = request.user
         if new_tag_form.is_valid():
-            tg = new_tag_form.save(commit=True)
+            new_tag = new_tag_form.save(commit=True)
         else:
-            new_tag = False
-            tg = False
-            # @TODO fix required error
             print(new_tag_form.errors)
+    else:
+        new_tag = False
 
-        # Validate Bookmark, Check for Duplicates, Optional Attach Tags, Save
-        # And Return Appropriate Response
-        form = BookmarkForm(request_POST, instance=bookmark)
-        form.instance.user = request.user
-        if form.is_valid():
-            if edit or not is_duplicate(form.cleaned_data['url'], user_id):
-                bm = form.save(commit=True)
-                if new_tag:
-                    bm.tags.add(tg)
-                if edit:
-                    context = get_detail_user_context(user_id, bookmark)
-                else:
-                    context = get_index_user_context(user_id)
-                return render(request, template, context)
+    # Validate Bookmark, Check for Duplicates, Optional Attach Tags, Save
+    # And Return Appropriate Response
+    form = BookmarkForm(request_POST, instance=bookmark)
+    form.instance.user = request.user
+    if form.is_valid():
+        if edit or not is_duplicate(form.cleaned_data['url'], user_id):
+            bm = form.save(commit=True)
+            if new_tag:
+                bm.tags.add(new_tag)
+            if edit:
+                context = get_detail_user_context(user_id, bookmark)
             else:
                 context = get_index_user_context(user_id)
-                context['messages'] = ['duplicate link not saved']
-                return render(request, template, context, status=400)
+            return render(request, template, context)
         else:
-            print(form.errors)
             context = get_index_user_context(user_id)
-            context['messages'] = ['invalid form data']
+            context['messages'] = ['duplicate link not saved']
             return render(request, template, context, status=400)
+    else:
+        print(form.errors)
+        context = get_index_user_context(user_id)
+        context['messages'] = ['invalid form data']
+        return render(request, template, context, status=400)
 
 @login_required
 def index(request):
