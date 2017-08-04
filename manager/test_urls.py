@@ -18,4 +18,17 @@ class TestManagerUrls(TestCase):
         self.assertEqual(reverse('manager:list_by_tag', args=[23]), '/list/23/')
 
     def test_list_by_tag_resolve(self):
-        self.assertEqual(resolve('/list/23/').view_name,'manager:list_by_tag')
+        self.assertEqual(resolve('/list/23/').view_name, 'manager:list_by_tag')
+
+    def test_bookmark_detail_reverse(self):
+        self.assertEqual(reverse('manager:bookmark_detail', args=[32]), '/bookmark/32/')
+
+    def test_bookmark_detail_resolve(self):
+        self.assertEqual(resolve('/bookmark/44/').view_name, 'manager:bookmark_detail')
+
+    def test_bookmark_delete_reverse(self):
+        self.assertEqual(reverse('manager:bookmark_delete', args=[81]), '/bookmark/81/delete/')
+
+    def test_bookmark_delete_resolve(self):
+        self.assertEqual(resolve('/bookmark/52/delete/').view_name, 'manager:bookmark_delete')
+

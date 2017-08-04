@@ -38,7 +38,7 @@ def save_form_and_response(request, request_POST, template, bookmark, edit=False
     user_id = request.user.id
 
     # Instantiate, Validate, Save New Tag Forms
-    if request_POST['name']:
+    if request_POST.get('name', False):
         new_tag_form = QuickTagForm(request_POST)
         new_tag_form.instance.user = request.user
         if new_tag_form.is_valid():
