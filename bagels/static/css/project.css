@@ -69,3 +69,8 @@
 
 
 #bookmark_submit {float: right;}
+
+.url-text {
+  font-size: .8rem;
+  color: gray;
+}
