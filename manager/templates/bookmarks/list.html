@@ -7,11 +7,16 @@
           <td class="url col-sm-9">
             <a href="{{ bookmark.url }}">
               {% if bookmark.title %}
-                {{ bookmark.title}}
+                {{ bookmark.title }}
               {% else %}
                 {{ bookmark.url }}
               {% endif %}
             </a>
+            <div>
+              {% if bookmark.title %}
+                {{ bookmark.url }}
+              {% endif %}
+            </div>
             <br />
             {% for tag in bookmark.tags.all %}
               <span>{{ tag }}</span>
