@@ -157,29 +157,27 @@ def bookmark_import_confirm(request):
     template = 'bookmarks/import_confirm.html'
     confirm_list = request.session['confirm_list']
     context = { 'confirm_list': confirm_list }
-    context['debug'] = [confirm_list['count']]
+    print(confirm_list)
     if request.method == 'GET':
         # Create the Formset
         BookmarkFormSet = formset_factory(
             BookmarkForm,
-            extra=confirm_list['count']
+            extra=confirm_list['count'] - 1
         )
+        confirm_list.pop('count', None)
         # Set time tag
         formset = BookmarkFormSet(initial=[
+            # 1.11/ref/forms/api/#django.forms.Form.initial
             {'tags': ['i{}'.format(timezone.now())]}
         ])
         # set url and source tag values in form to confirm
-        confirm_list.pop('count', None)
-
-        # @TODO Generate expression?
         links_list = []
         for source, links in confirm_list.items():
-            links_list += links
-
+            for link in links:
+                links_list.append({'source': source, 'url': link})
         for link, form in zip(links_list, formset):
-            data = {'url':link,'title': source + '-import'}
+            data = {'url':link['url'], 'title': link['source'] + '-import'}
             form.initial = data
 
         context['formset'] = formset
-        context['debug'] += [len(links_list), len(formset), links_list]
         return render(request, template, context)

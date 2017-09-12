@@ -48,15 +48,16 @@ reg0 = re.compile(
 reg1 = re.compile(u"(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|((?:[a-z\u00a1-\uffff0-9]-?)*[a-z\u00a1-\uffff0-9]+)(\.(?:[a-z\u00a1-\uffff0-9]-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:/\S*)?$")
 
 def handle(files, bm_list, reg=reg0):
+    bm_list['count'] = 0
     for i, f in enumerate(files):
         bm_list[f.name] = []
-        bm_list['count'] = 0
         # @TODO chunk
         for line in f:
             line = line.decode()
             match = re.search(reg, line)
             if match:
-                bm_list[f.name].append(match.group(0))
+                url = match.group(0)
+                bm_list[f.name].append(url)
                 bm_list['count'] += 1
     return bm_list
 
