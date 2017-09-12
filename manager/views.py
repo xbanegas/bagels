@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.forms import formset_factory
 from django.forms.models import model_to_dict
 from django.contrib import messages
+from django.urls import reverse
+from django.utils import timezone
 
 from .bookmarks.models import Bookmark
 from .tags.models import Tag
-from .forms import BookmarkForm, QuickTagForm
+from .forms import BookmarkForm, QuickTagForm, BookmarkImportFilesForm
+from .utils.handle_import import handle
 
 
 # @ TODO Move to utils, form, or Bookmark
@@ -38,6 +42,7 @@ def save_form_and_response(request, request_POST, template, bookmark, edit=False
     user_id = request.user.id
 
     # Instantiate, Validate, Save New Tag Forms
+    # Check for tag name or else no new tags to save
     if request_POST.get('name', False):
         new_tag_form = QuickTagForm(request_POST)
         new_tag_form.instance.user = request.user
@@ -126,4 +131,55 @@ def list_by_tag(request, tag_id):
     if request.method == 'GET':
         bookmarks = Bookmark.objects.filter(user__id=user_id, tags__id=tag_id).order_by('-created')
         context = {'nodes': {}, 'bookmark_list': bookmarks, 'tag': tag}
+        return render(request, template, context)
+
+
+@login_required
+def bookmark_import(request):
+    template = 'bookmarks/import.html'
+    form = BookmarkImportFilesForm()
+    context = {'form': form, 'data': {}}
+    if request.method == 'GET':
+        return render(request, template, context)
+    if request.method == 'POST':
+        form = BookmarkImportFilesForm(request.POST, request.FILES)
+        files = request.FILES.getlist('file_field')
+        if form.is_valid():
+            bm_list = {}
+            bm_list = handle(files, bm_list)
+            context['bm_list'] = bm_list
+            request.session['confirm_list'] = bm_list
+            return redirect(reverse('manager:bookmark_import_confirm'))
+
+
+@login_required
+def bookmark_import_confirm(request):
+    template = 'bookmarks/import_confirm.html'
+    confirm_list = request.session['confirm_list']
+    context = { 'confirm_list': confirm_list }
+    context['debug'] = [confirm_list['count']]
+    if request.method == 'GET':
+        # Create the Formset
+        BookmarkFormSet = formset_factory(
+            BookmarkForm,
+            extra=confirm_list['count']
+        )
+        # Set time tag
+        formset = BookmarkFormSet(initial=[
+            {'tags': ['i{}'.format(timezone.now())]}
+        ])
+        # set url and source tag values in form to confirm
+        confirm_list.pop('count', None)
+
+        # @TODO Generate expression?
+        links_list = []
+        for source, links in confirm_list.items():
+            links_list += links
+
+        for link, form in zip(links_list, formset):
+            data = {'url':link,'title': source + '-import'}
+            form.initial = data
+
+        context['formset'] = formset
+        context['debug'] += [len(links_list), len(formset), links_list]
         return render(request, template, context)

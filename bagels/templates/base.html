@@ -14,9 +14,8 @@
     <![endif]-->
 
     {% block css %}
-    <!-- Latest compiled and minified Bootstrap 4 Alpha 4 CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
-
+    <!-- Latest compiled and minified Bootstrap 4 Beta CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <!-- Your stuff: Third-party CSS libraries go here -->
 
     <!-- This file stores project-specific CSS -->
@@ -37,29 +36,32 @@
 
   </head>
 
+
   <body>
     <!--  Top Navbar -->
     {% include "nav/topbar.html" %}
 
+    <div class="container-fluid">
+      <div class="row">
+        <!--  Tag Sidebar -->
+        <div class="col col-lg-2 bg-dark">
+          {% if request.user.is_authenticated %}
+            {% include "nav/sidebar.html" %}
+          {% endif %}
+        </div>
+        <div class="col-lg-8">
+        <!-- Main -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
 
-    <!--  Tag Sidebar -->
-    {% if request.user.is_authenticated %}
-      {% include "nav/sidebar.html" %}
-    {% endif %}
-
-    <!-- Main -->
-    <div class="container">
-
-      {% if messages %}
-          {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
-          {% endfor %}
-      {% endif %}
-
-      {% block content %}
-        <p>Welcome to Bagels</p>
-      {% endblock content %}
-
+        {% block content %}
+          <p>Welcome to Bagels</p>
+        {% endblock content %}
+        </div>
+      </div>
     </div> <!-- /container -->
 
     {% block modal %}{% endblock modal %}
@@ -71,8 +73,7 @@
       <!-- Required by Bootstrap v4 Alpha 4 -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
-
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
       <!-- Your stuff: Third-party javascript libraries go here -->
 
       <!-- place project specific Javascript in this file -->

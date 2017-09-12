@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="{% url 'manager:bookmark_import' %}" enctype="multipart/form-data" method="post" class="form-horizontal">
+  {% csrf_token %}
+  {{ form }}
+  <div class="form-group col-sm-12" id="bookmark_submit">
+      <button class="btn btn-primary text-right" type="submit">OK</button>
+  </div>
+</form>
+
+
+{% endblock content %}

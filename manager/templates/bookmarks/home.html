@@ -4,27 +4,39 @@
 
 {% block content %}
 
-<div class="container">
+
   <div class="row">
-    <div id="accordion" role="tablist" aria-multiselectable="true">
+    <div id="addBookmarkAccordion" role="tablist" aria-multiselectable="true">
       <div class="card">
         <div class="card-header" role="tab" id="bookmarkFormHeading">
-          <h5>
-            <a data-toggle="collapse" data-parent="#accordion" href="#bookmarkFormCollapse" aria-expanded="true" aria-controls="bookmarkFormCollapse">
-              Add a Bookmark...
-            </a>
-          </h5>
+          <div class="row">
+            <div class="col-md-4 ml-auto">
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            </div>
+            <div class="col-4 text-right">
+            <h5 id="bookmarkCollapseHeading">
+              <a data-toggle="collapse" data-parent="#accordion" href="#bookmarkFormCollapse" aria-expanded="true" aria-controls="bookmarkFormCollapse">
+               +
+              </a>
+            </h5>
+            </div>
+          </div>
         </div>
         <div id="bookmarkFormCollapse" class="collapse show" role="tabpanel" aria-labelledby="bookmarkFormHeading">
           <div class="card-block">
+            <div class="container">
             <form action="/" method="post" class="bookmark-form form-horizontal">
               {% include "bookmarks/form.html" %}
             </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   {% include 'bookmarks/list.html' %}
-</div>
+
 {% endblock content %}

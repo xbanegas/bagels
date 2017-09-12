@@ -43,7 +43,9 @@
     </div>
   </div>
 
-  <div class="form-group col-sm-12" id="bookmark_submit">
-      <button class="btn btn-primary text-right" type="submit">OK</button>
+  <div class="form-group col-sm-12 text-right" id="bookmark_submit">
+    <a href="{% url 'manager:bookmark_import' %}">Import</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button class="btn btn-primary" type="submit">OK</button>
   </div>
 </div>

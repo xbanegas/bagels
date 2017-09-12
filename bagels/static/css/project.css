@@ -73,4 +73,11 @@
 .url-text {
   font-size: .8rem;
   color: gray;
+  max-width: 500px;
 }
+
+#addBookmarkAccordion {width: 100%;}
+
+#addBookmarkAccordion .card-header:first-child {border-radius: none;}
+
+#bookmarkCollapseHeading { padding: .5rem .75rem; }

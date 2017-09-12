@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>Confirm links</h4>
+
+<div class="row justify-content-center">
+  <div class="col" class="confirm-form-wrapper">
+    <form action="{% url 'manager:bookmark_import_confirm' %}" method="post" class="form-horizontal">
+      {% csrf_token %}
+      {{ confirm_list }}
+      {% for form in formset %}
+        <div class="form-group">
+          <label for="{{ form.title.id_for_label }}" class="control-label">Title:</label>
+          <input id="{{ form.title.id_for_label }}" maxlength="255" name="url" type="text" class="form-control"
+                    value="{{ form.title.value }}" required>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.url.id_for_label }}" class="control-label">Url:</label>
+          <input id="{{ form.url.id_for_label }}" maxlength="255" name="url" type="text" class="form-control"
+              value="{{ form.url.value }}" required>
+        </div>
+      {% endfor %}
+
+      <div class="form-group col-sm-12" id="bookmark_submit">
+          <button class="btn btn-primary text-right" type="submit">OK</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{ debug }}
+{% endblock content %}
