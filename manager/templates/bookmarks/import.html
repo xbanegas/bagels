@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="col text-center">
+  <h4>Confirm links</h4>
+</div>
+<div class="col-12 text-center vtext-center">
 
-<form action="{% url 'manager:bookmark_import' %}" enctype="multipart/form-data" method="post" class="form-horizontal">
-  {% csrf_token %}
-  {{ form }}
-  <div class="form-group col-sm-12" id="bookmark_submit">
-      <button class="btn btn-primary text-right" type="submit">OK</button>
-  </div>
-</form>
-
+  <form action="{% url 'manager:bookmark_import' %}" enctype="multipart/form-data" method="post" class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group">
+    {{ form }}
+    </div>
+    <div class="form-group col-sm-12" id="bookmark_submit">
+        <button class="btn btn-primary text-right" type="submit">OK</button>
+    </div>
+  </form>
+</div>
 
 {% endblock content %}

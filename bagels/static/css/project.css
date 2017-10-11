@@ -56,17 +56,16 @@
   font-size: .75em;
 }
 
-#tags_checkbox {
+.tags_checkbox {
   height: 175px;
   line-height: .7;
   overflow: scroll;
 }
 
-#tags_checkbox ul {
+.tags_checkbox ul {
   list-style: none;
   padding-top: 15px;
 }
-
 
 #bookmark_submit {float: right;}
 
@@ -77,7 +76,10 @@
 }
 
 #addBookmarkAccordion {width: 100%;}
-
+#addBookmarkAccordion .card {border: none}
 #addBookmarkAccordion .card-header:first-child {border-radius: none;}
 
 #bookmarkCollapseHeading { padding: .5rem .75rem; }
+
+.vtext-center { margin: 300px 0px }
+

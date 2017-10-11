@@ -37,19 +37,19 @@
   </head>
 
 
-  <body>
+  <body class="bg-dark">
     <!--  Top Navbar -->
     {% include "nav/topbar.html" %}
 
     <div class="container-fluid">
       <div class="row">
         <!--  Tag Sidebar -->
-        <div class="col col-lg-2 bg-dark">
+        <div class="col col-lg-2">
           {% if request.user.is_authenticated %}
             {% include "nav/sidebar.html" %}
           {% endif %}
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-8 bg-light">
         <!-- Main -->
         {% if messages %}
             {% for message in messages %}

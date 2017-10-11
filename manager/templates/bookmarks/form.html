@@ -1,51 +1,58 @@
 <div class="row">
-  {% csrf_token %}
 
-  <div class="form-group col-sm-12">
+  <div class="col-10 mx-auto">
+  <div class="form-group">
     <div class="row">
       <div class="col-sm-12">{{ form.url.errors }}</div>
-      <label for="id_url" class="col-sm-2 control-label">Url:</label>
+      <label for="{{ form.url.id_for_label }}" class="col-sm-2 control-label">Url:</label>
       <div class="col-sm-10">
-        <input id="id_url" maxlength="255" name="url" type="text" class="form-control" required>
+        <input id="{{ form.url.id_for_label }}" maxlength="255" name="{{ form.url.html_name }}" type="text" class="form-control" value="{{ form.url.value }}"
+               {% url 'manager:bookmark_import_confirm' as import_confirm %}
+               {% if not request.path == import_confirm %}
+                required
+               {% endif %}
+        >
       </div>
     </div>
   </div>
 
-  <div class="form-group col-sm-12">
+  <div class="form-group">
     <div class="row">
       <div class="col-sm-12">{{ form.title.errors }}</div>
-      <label for="id_title" class="col-sm-2 control-label">Title:</label>
+      <label for="{{ form.title.id_for_label }}" class="col-sm-2 control-label">Title:</label>
       <div class="col-sm-10">
-        <input id="id_title" maxlength="255" name="title" type="text" class="form-control">
+        <input id="{{ form.title.id_for_label }}" maxlength="255" name="{{ form.title.html_name }}" type="text" class="form-control" value="{{ form.title.value }}">
       </div>
     </div>
   </div>
 
-  <div class="form-group col-sm-12">
+  <div class="form-group">
     <div class="row">
       <div class="col-sm-12">{{ form.tags.errors }}{{ form.notes.errors }}</div>
-      <div class="col-sm-5" >
+      <div class="col-sm-7">
+        <label for="{{ form.notes.id_for_label }}" class="control-label">Notes:</label>
+        <textarea cols="50" id="{{ form.notes.id_for_label }}" name="{{ form.notes.html_name }}" rows="15" class="form-control"></textarea>
+      </div>
+      <div class="col-sm-3 tag-widget" >
         <div class="row">
-          <div class="col-sm-12"><label for="id_tags" class="control-label">Tags:</label></div>
-          <div class="col-sm-10"><input id="id_name" maxlength="50" name="name" type="text" class="form-control"></div>
+          <div class="col-sm-12"><label for="{{ tag_form.name.id_for_label }}" class="control-label">Tags:</label></div>
+          <div class="col-sm-10"><input id="{{ tag_form.name.id_for_label }}" maxlength="50" name="{{ tag_form.name.html_name }}" type="text" class="form-control"></div>
         </div>
-        <div class="row" id="tags_checkbox">
+        <div class="row tags_checkbox">
           <div class="col-sm-12">
             {{ form.tags }}
           </div>
         </div>
       </div>
-
-      <div class="col-sm-7">
-        <label for="id_notes" class="control-label">Notes:</label>
-        <textarea cols="50" id="id_notes" name="notes" rows="15" class="form-control"></textarea>
-      </div>
     </div>
   </div>
 
   <div class="form-group col-sm-12 text-right" id="bookmark_submit">
-    <a href="{% url 'manager:bookmark_import' %}">Import</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <button class="btn btn-primary" type="submit">OK</button>
+      {% url 'manager:home' as home_url %}
+  &nbsp;&nbsp;&nbsp;&nbsp;{% if request.path == home_url %}
+        <a href="{% url 'manager:bookmark_import' %}">Import</a>
+        <button class="btn btn-primary" type="submit">OK</button>
+      {% endif %}
+  </div>
   </div>
 </div>

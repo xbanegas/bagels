@@ -26,7 +26,12 @@ def get_index_user_context(user_id):
     form = BookmarkForm()
     form.fields['tags'].queryset = tags
     tag_form = QuickTagForm()
-    context = {'nodes': tags, 'bookmark_list': bookmarks, 'form': form, 'tag_form': tag_form}
+    context = {
+        'nodes': tags,
+        'bookmark_list': bookmarks,
+        'form': form,
+        'tag_form': tag_form
+    }
     return context
 
 
@@ -86,6 +91,10 @@ def index(request):
 
     if request.method == 'GET':
         context = get_index_user_context(user_id)
+        if 'debug' in request.session:
+            context['debug'] = request.session['debug']
+        else:
+            context['debug'] = None
         return render(request, template, context)
 
     if request.method == 'POST':
@@ -155,19 +164,21 @@ def bookmark_import(request):
 @login_required
 def bookmark_import_confirm(request):
     template = 'bookmarks/import_confirm.html'
+    context = {}
     confirm_list = request.session['confirm_list']
-    context = { 'confirm_list': confirm_list }
-    print(confirm_list)
+
     if request.method == 'GET':
         # Create the Formset
         BookmarkFormSet = formset_factory(
             BookmarkForm,
             extra=confirm_list['count'] - 1
         )
+        # discard count for zipping with form later
         confirm_list.pop('count', None)
         # Set time tag
         formset = BookmarkFormSet(initial=[
             # 1.11/ref/forms/api/#django.forms.Form.initial
+            # @TODO check on tags
             {'tags': ['i{}'.format(timezone.now())]}
         ])
         # set url and source tag values in form to confirm
@@ -181,3 +192,19 @@ def bookmark_import_confirm(request):
 
         context['formset'] = formset
         return render(request, template, context)
+
+    if request.method == 'POST':
+        BookmarkFormSet = formset_factory(BookmarkForm)
+        formset = BookmarkFormSet(request.POST)
+        request.session['debug'] = []
+        if formset.is_valid():
+            for form in formset:
+                if form.is_valid():
+                    request.session['debug'].append(
+                        form.cleaned_data.get('url')
+                    )
+
+        # for data
+        # context['debug'] = request.POST
+        # return render(request, template, context)
+        return redirect('manager:home', permanent=True)
