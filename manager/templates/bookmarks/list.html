@@ -1,11 +1,11 @@
 <div class="row list-group">
 
 
-    <div class="container">
+    <div class="container bookmark_list">
       {% for bookmark in bookmark_list %}
         <div class="row">
           <div class="created col-2">{{ bookmark.created }}</div>
-          <div class="url col-10">
+          <div class="url col-7">
             <a href="{{ bookmark.url }}">
               {% if bookmark.title %}
                 {{ bookmark.title }}
@@ -18,19 +18,19 @@
                 {{ bookmark.url }}
               {% endif %}
             </div>
-            <br />
             {% for tag in bookmark.tags.all %}
               <span>{{ tag }}</span>
             {% endfor %}
-            <!-- @TODO Style to CSS -->
-            <div>
-              <a class="btn btn-outline-primary btn-sm" style="float:right;margin-left:15px;" href="{% url 'manager:bookmark_detail' bookmark.id %}">edit</a>
-              <a href="{% url 'manager:bookmark_delete' bookmark.id %}" style="float:right" class="btn btn-outline-secondary btn-sm">x</a>
+
+          </div>
+          <!-- @TODO Style to CSS -->
+            <div class="col-3">
+              <a href="{% url 'manager:bookmark_delete' bookmark.id %}" style="float:right;margin-left:5px;" class="btn btn-outline-secondary btn-sm">x</a>
+              <a class="btn btn-outline-primary btn-sm" style="float:right;margin-left:5px;" href="{% url 'manager:bookmark_detail' bookmark.id %}">edit</a>
               {% if bookmark.notes %}
                 <a class="btn btn-outline-info btn-sm" style="float:right;" href="/#notes">notes</a>
               {% endif %}
             </div>
-          </div>
         </div>
       {% endfor %}
       </div>

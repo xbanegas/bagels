@@ -2,14 +2,14 @@
 {% block content %}
 
 <div class="col text-center">
-  <h4>Confirm links</h4>
+  <h4>Confirm {{ bm_count }} links</h4>
 </div>
 <div class="row justify-content-center">
   <div class="col" class="confirm-form-wrapper">
     <form action="{% url 'manager:bookmark_import_confirm' %}" method="post" class="form-horizontal">
       {% csrf_token %}
-      {{ formset.management_form }}
-      {% for form in formset %}
+      {{ management_form }}
+      {% for form, tag_form in formset %}
          {% include "bookmarks/form.html" %}
       {% endfor %}
 

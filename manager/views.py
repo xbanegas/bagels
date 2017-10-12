@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 from django.forms.models import model_to_dict
 from django.contrib import messages
 from django.urls import reverse
-from django.utils import timezone
 
 from .bookmarks.models import Bookmark
 from .tags.models import Tag
@@ -155,8 +154,10 @@ def bookmark_import(request):
         files = request.FILES.getlist('file_field')
         if form.is_valid():
             bm_list = {}
+            # process the files, returning with links
             bm_list = handle(files, bm_list)
             context['bm_list'] = bm_list
+            # add list of bms to session for confirmation
             request.session['confirm_list'] = bm_list
             return redirect(reverse('manager:bookmark_import_confirm'))
 
@@ -165,22 +166,21 @@ def bookmark_import(request):
 def bookmark_import_confirm(request):
     template = 'bookmarks/import_confirm.html'
     context = {}
+
     confirm_list = request.session['confirm_list']
 
     if request.method == 'GET':
-        # Create the Formset
-        BookmarkFormSet = formset_factory(
-            BookmarkForm,
-            extra=confirm_list['count'] - 1
-        )
+        # Create Bookmarks Formset
+        bm_count = confirm_list['count']
         # discard count for zipping with form later
         confirm_list.pop('count', None)
-        # Set time tag
-        formset = BookmarkFormSet(initial=[
-            # 1.11/ref/forms/api/#django.forms.Form.initial
-            # @TODO check on tags
-            {'tags': ['i{}'.format(timezone.now())]}
-        ])
+        # Create BM Formset
+        BookmarkFormSet = formset_factory(
+            BookmarkForm,
+            extra=bm_count
+        )
+        # Instantiate Bookmark Formset
+        formset = BookmarkFormSet()
         # set url and source tag values in form to confirm
         links_list = []
         for source, links in confirm_list.items():
@@ -190,21 +190,62 @@ def bookmark_import_confirm(request):
             data = {'url':link['url'], 'title': link['source'] + '-import'}
             form.initial = data
 
-        context['formset'] = formset
+        # Create Quick Tag Formset
+        QuickTagFormSet = formset_factory(
+            QuickTagForm,
+            extra=bm_count
+        )
+        # Instantiate qtag_formset and add to context
+        qtag_formset = QuickTagFormSet()
+
+        # Zip Formsets Into Context and Session
+        context['bm_count'] = bm_count
+        request.session['bm_count'] = bm_count
+        context['management_form'] = formset.management_form
+        context['formset'] = zip(formset, qtag_formset)
+        # Return Response
         return render(request, template, context)
 
     if request.method == 'POST':
-        BookmarkFormSet = formset_factory(BookmarkForm)
+        user = request.user
+        user_id = request.user.id
+
+        # use session to validate max BM forms
+        if 'bm_count' in request.session:
+            bm_count = request.session['bm_count']
+        else:
+            bm_count = 0
+
+        # Prepare BM Formset
+        BookmarkFormSet = formset_factory(
+            BookmarkForm,
+            max_num=bm_count,
+            validate_max=True
+        )
+        # Instantiate BM Formset
         formset = BookmarkFormSet(request.POST)
         request.session['debug'] = []
+
+        # Begin Validation
+        save_count = 0
         if formset.is_valid():
+            # Iterate through each BM Form
             for form in formset:
                 if form.is_valid():
-                    request.session['debug'].append(
-                        form.cleaned_data.get('url')
-                    )
+                    this_url = form.cleaned_data.get('url')
+                    # request.session['debug'].append(this_url)
+                    # Save if not empty or duplicate link
+                    if this_url and not is_duplicate(this_url, user_id):
+                        form.instance.user = user
+                        form.save(commit=True)
+                        save_count += 1
+                    else:
+                        del form
 
-        # for data
-        # context['debug'] = request.POST
-        # return render(request, template, context)
+        # Report Action To User
+        messages.success(
+            request, '{}/{} Bookmarks Saved'.format(save_count, bm_count)
+        )
+
+        # Return Home with New Bookmarks
         return redirect('manager:home', permanent=True)
