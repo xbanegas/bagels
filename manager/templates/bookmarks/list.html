@@ -2,6 +2,19 @@
 
 
     <div class="container bookmark_list">
+      <div class="pagination">
+        <span class="step-links">
+          {% if bookmark_list.has_previous %}
+            <a href="?page={{ bookmark_list.previous_page_number }}"><<</a>
+          {% endif %}
+        <span class="current">
+            Page {{ bookmark_list.number }} of {{ bookmark_list.paginator.num_pages }}
+        </span>
+        {% if bookmark_list.has_next %}
+            <a href="?page={{ bookmark_list.next_page_number }}">>></a>
+        {% endif %}
+        </span>
+      </div>
       {% for bookmark in bookmark_list %}
         <div class="row">
           <div class="created col-2">{{ bookmark.created }}</div>
@@ -33,6 +46,19 @@
             </div>
         </div>
       {% endfor %}
+        <div class="pagination">
+          <span class="step-links">
+            {% if bookmark_list.has_previous %}
+              <a href="?page={{ bookmark_list.previous_page_number }}"><<</a>
+            {% endif %}
+          <span class="current">
+              Page {{ bookmark_list.number }} of {{ bookmark_list.paginator.num_pages }}
+          </span>
+          {% if bookmark_list.has_next %}
+              <a href="?page={{ bookmark_list.next_page_number }}">>></a>
+          {% endif %}
+          </span>
+        </div>
       </div>
 
 

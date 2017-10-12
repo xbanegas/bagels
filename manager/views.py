@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.forms import formset_factory, inlineformset_factory
+from django.forms import formset_factory
 from django.forms.models import model_to_dict
 from django.contrib import messages
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .bookmarks.models import Bookmark
 from .tags.models import Tag
@@ -19,12 +20,28 @@ def is_duplicate(url, user_id):
 
 
 # @ TODO Move to utils or form
-def get_index_user_context(user_id):
-    tags = Tag.objects.filter(user__id=user_id)
-    bookmarks = Bookmark.objects.filter(user__id=user_id).order_by('-created')
+def get_index_user_context(user_id, page=1):
+    # Grab User's Tags
+    tags = Tag.objects.filter(user__id=user_id).order_by('name')
+    # Grab User's Bookmarks by Recent
+    bookmark_list = Bookmark.objects.filter(user__id=user_id).order_by('-created')
+    # Paginate Bookmarks
+    paginator = Paginator(bookmark_list, 25)
+    try:
+        bookmarks = paginator.page(page)
+    except PageNotAnInteger:
+        bookmarks = paginator.page(1)
+    except EmptyPage:
+        bookmarks = paginator.page(paginator.num_pages)
+
+    # Instantiate Homepage BM Form
     form = BookmarkForm()
+    # Populate form with Tags
     form.fields['tags'].queryset = tags
+    # Instantiate New Tag Form
     tag_form = QuickTagForm()
+
+    # Prepare and Return Context
     context = {
         'nodes': tags,
         'bookmark_list': bookmarks,
@@ -35,7 +52,7 @@ def get_index_user_context(user_id):
 
 
 def get_detail_user_context(user_id, bookmark):
-    tags = Tag.objects.filter(user__id=user_id)
+    tags = Tag.objects.filter(user__id=user_id).order_by('name')
     form = BookmarkForm(initial=model_to_dict(bookmark))
     tag_form = QuickTagForm()
     context = {'nodes': tags, 'form': form, 'tag_form': tag_form, 'bookmark': bookmark}
@@ -70,15 +87,15 @@ def save_form_and_response(request, request_POST, template, bookmark, edit=False
                 context = get_detail_user_context(user_id, bookmark)
                 messages.success(request, 'Bookmark Saved')
             else:
-                context = get_index_user_context(user_id)
+                context = get_index_user_context(user_id, page=1)
             return render(request, template, context)
         else:
-            context = get_index_user_context(user_id)
+            context = get_index_user_context(user_id, page=1)
             messages.warning(request, 'Duplicate link not saved')
             return render(request, template, context, status=400)
     else:
         print(form.errors)
-        context = get_index_user_context(user_id)
+        context = get_index_user_context(user_id, page=1)
         messages.error(request, 'Check the form and try again')
         return render(request, template, context, status=400)
 
@@ -88,8 +105,10 @@ def index(request):
     user_id = request.user.id
     template = 'bookmarks/home.html'
 
+
     if request.method == 'GET':
-        context = get_index_user_context(user_id)
+        page = request.GET.get('page')
+        context = get_index_user_context(user_id, page=page)
         if 'debug' in request.session:
             context['debug'] = request.session['debug']
         else:
@@ -134,11 +153,27 @@ def bookmark_delete(request, bookmark_id):
 def list_by_tag(request, tag_id):
     user_id = request.user.id
     template = 'bookmarks/list_by_tag.html'
+
+    # Get Tag or 404
     tag = get_object_or_404(Tag, pk=tag_id)
 
     if request.method == 'GET':
-        bookmarks = Bookmark.objects.filter(user__id=user_id, tags__id=tag_id).order_by('-created')
-        context = {'nodes': {}, 'bookmark_list': bookmarks, 'tag': tag}
+        # Get Bookmarks and Paginate
+        bookmark_list = Bookmark.objects\
+            .filter(user__id=user_id, tags__id=tag_id)\
+            .order_by('-created')
+        page = request.GET.get('page')
+        paginator = Paginator(bookmark_list, 25)
+        try:
+            bookmarks = paginator.page(page)
+        except PageNotAnInteger:
+            bookmarks = paginator.page(1)
+        except EmptyPage:
+            bookmarks = paginator.page(paginator.num_pages)
+
+        tags = Tag.objects.filter(user__id=user_id).order_by('name')
+
+        context = {'nodes': tags, 'bookmark_list': bookmarks, 'tag': tag}
         return render(request, template, context)
 
 
@@ -148,6 +183,8 @@ def bookmark_import(request):
     form = BookmarkImportFilesForm()
     context = {'form': form, 'data': {}}
     if request.method == 'GET':
+        tags = Tag.objects.filter(user__id=request.user.id).order_by('name')
+        context['nodes'] = tags
         return render(request, template, context)
     if request.method == 'POST':
         form = BookmarkImportFilesForm(request.POST, request.FILES)

@@ -5,7 +5,9 @@
 {% block content %}
 
 <div class="container">
-  <h4>{{ tag.name }}</h4>
+  <div class="jumbotron">
+  <h4 class="text-center">{{ tag.name }}</h4>
+    </div>
   {% include 'bookmarks/list.html' %}
 </div>
 

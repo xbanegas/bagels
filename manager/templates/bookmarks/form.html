@@ -6,7 +6,10 @@
       <div class="col-sm-12">{{ form.url.errors }}</div>
       <label for="{{ form.url.id_for_label }}" class="col-sm-2 control-label">Url:</label>
       <div class="col-sm-10">
-        <input id="{{ form.url.id_for_label }}" maxlength="255" name="{{ form.url.html_name }}" type="text" class="form-control" value="{{ form.url.value }}"
+        <input id="{{ form.url.id_for_label }}" maxlength="255" name="{{ form.url.html_name }}" type="text" class="form-control"
+               {% if form.url.value %}
+               value="{{ form.url.value }}"
+               {% endif %}
                {% url 'manager:bookmark_import_confirm' as import_confirm %}
                {% if not request.path == import_confirm %}
                 required
@@ -21,7 +24,11 @@
       <div class="col-sm-12">{{ form.title.errors }}</div>
       <label for="{{ form.title.id_for_label }}" class="col-sm-2 control-label">Title:</label>
       <div class="col-sm-10">
-        <input id="{{ form.title.id_for_label }}" maxlength="255" name="{{ form.title.html_name }}" type="text" class="form-control" value="{{ form.title.value }}">
+        <input id="{{ form.title.id_for_label }}" maxlength="255" name="{{ form.title.html_name }}" type="text" class="form-control"
+               {% if form.title.value %}
+                value="{{ form.title.value }}"
+               {% endif %}
+        >
       </div>
     </div>
   </div>
@@ -33,7 +40,7 @@
         <label for="{{ form.notes.id_for_label }}" class="control-label">Notes:</label>
         <textarea cols="50" id="{{ form.notes.id_for_label }}" name="{{ form.notes.html_name }}" rows="15" class="form-control"></textarea>
       </div>
-      <div class="col-sm-3 tag-widget" >
+      <div class="col-sm-5 tag-widget" >
         <div class="row">
           <div class="col-sm-12"><label for="{{ tag_form.name.id_for_label }}" class="control-label">Tags:</label></div>
           <div class="col-sm-10"><input id="{{ tag_form.name.id_for_label }}" maxlength="50" name="{{ tag_form.name.html_name }}" type="text" class="form-control"></div>
