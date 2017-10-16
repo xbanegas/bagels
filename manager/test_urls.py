@@ -32,3 +32,14 @@ class TestManagerUrls(TestCase):
     def test_bookmark_delete_resolve(self):
         self.assertEqual(resolve('/bookmark/52/delete/').view_name, 'manager:bookmark_delete')
 
+    def test_bookmark_import_reverse(self):
+        self.assertEqual(reverse('manager:bookmark_import'), '/bookmark/import/')
+
+    def test_bookmark_import_resolve(self):
+        self.assertEqual(resolve('/bookmark/import/').view_name, 'manager:bookmark_import')
+
+    def test_bookmark_import_confirm_reverse(self):
+        self.assertEqual(reverse('manager:bookmark_import_confirm'), '/bookmark/import/confirm/')
+
+    def test_bookmark_import_confirm_resolve(self):
+        self.assertEqual(resolve('/bookmark/import/confirm/').view_name, 'manager:bookmark_import_confirm')

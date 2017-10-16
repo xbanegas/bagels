@@ -25,6 +25,7 @@ class TestIndex(BaseManagerTestCase):
     def test_index_response(self):
         request = self.factory.get('/')
         request.user = self.user
+        insert_sessions(request)
         response = index(request)
         self.response_200(response)
 
@@ -53,6 +54,7 @@ class TestIndexLoginRequired(BaseManagerTestCase):
     def test_home_renders_to_user(self):
         request = self.factory.get('/')
         request.user = self.user
+        insert_sessions(request)
         # @TODO work around template error
         response = index(request)
         self.assertEqual(response.status_code, 200)
@@ -150,5 +152,5 @@ class TestListByTag(BaseManagerTestCase):
         request = self.factory.get(url)
         request.user = self.user
         response = list_by_tag(request, tag_id)
-        text = "<tr>"
+        text = '<div class="created'
         self.assertContains(response, text, count=2, status_code=200)
